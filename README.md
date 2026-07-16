@@ -173,7 +173,7 @@ flowchart TD
 
 ### 3.4. SQLite Swarm Orchestration (`swarm-orchestrator.py`)
 *   **The Technical Challenge**: Comprehensive security auditing is a multi-step process (Recon $\rightarrow$ Vulnerability Scanning $\rightarrow$ Exploit Verification $\rightarrow$ Documenting). Running these steps sequentially exhausts LLM context windows and slows down execution.
-*   **NEXUS-PRIME Solution**: Implements a concurrent multi-agent swarm coordinated via a shared SQLite IPC database (`swarm_ipc.db`). Agents (such as `nexus-recon` and `nexus-web-hunter`) run parallel tasks in isolated background shells, writing results to the shared database and preventing context window dilution.
+*   **NEXUS-PRIME Solution**: Implements a concurrent multi-agent swarm coordinated via a shared SQLite IPC database (`swarm_ipc.db`). A massive 10-agent concurrent swarm (including nested sub-swarms like `red-run`) runs parallel tasks in isolated background shells, writing results to the shared database and preventing context window dilution.
 *   **C-Suite Impact**: **Drastically increases auditing speed**, allowing teams to run multi-vector assessments concurrently.
 
 ---
@@ -272,8 +272,8 @@ flowchart TD
 ## 7. Operational Workflows
 
 Operational workflows are mapped to specific slash commands. When running inside the terminal interface:
-*   `/nexus-multiagent`: Triggers the Swarm Orchestrator to spawn a massive 6-agent concurrent swarm (`nexus-recon`, `nexus-web-hunter`, `nexus-redteam`, `nexus-bughunter`, `nexus-cyberstrike`, and `nexus-anthropic-sec`) to audit a single target simultaneously.
+*   `/nexus-multiagent`: Triggers the Swarm Orchestrator to spawn a massive **10-agent concurrent swarm** to audit a single target simultaneously. This includes specialized sub-orchestrators like `nexus-red-run` (managing its own 12-agent sub-swarm), `nexus-exploit-dev`, `red-team-ops` (Masriyan Cybersec), and `offensive-osint`.
 *   `/hunt`: Initiates the full-lifecycle bug hunting workflow (Recon $\rightarrow$ Validation $\rightarrow$ Exploitation $\rightarrow$ Reporting).
 *   `/quick-scan`: Runs a rapid tech fingerprinting and exposed file check.
 *   `/security-audit`: Executes a full OWASP ASVS/WSTG security assessment.
-*   `/nexus-report`: Reads workspace findings and compiles a po
+*   `/nexus-report`: Reads workspace findings and compiles a professional security report (Executive, Technical, Bug Bounty, or Compliance formats).
